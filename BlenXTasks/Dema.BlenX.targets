@@ -1,0 +1,21 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--Import the standards targets-->
+  <!--<Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />-->
+
+  <UsingTask TaskName="SimTask" AssemblyFile="Dema.BlenX.Tasks.dll" />
+
+  <Target Name="Simulate">
+    <!--Inputs="@(Prog.FullPath);@(Types.FullPath);@(Func.FullPath)"
+    Outputs="@(Prog.FullPath->'$(IntermediateOutputPath)%(FileName).spec')">-->
+    <SimTask
+        SourceDir="$(MSBuildProjectDirectory)"
+        ProgName="@(Prog)"
+        TypesName="@(Types)"
+        FuncName="@(Func)"
+        SimPath="$(BetaSimPath)"
+        OutputBaseName="$(BaseOutputName)">
+      <!--OutputBaseName="@(Prog.FullPath->'$(IntermediateOutputPath)%(FileName)')"-->
+      <Output TaskParameter="OutputSpecName" ItemName="Compile" />
+    </SimTask>
+  </Target>
+</Project>

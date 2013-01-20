@@ -1,0 +1,15 @@
+<VSTemplate Type="Item" Version="2.0.0"
+   xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>BlenX Prog file</Name>
+    <Description>Main model definition file</Description>
+    <DefaultName>MyModel</DefaultName>
+    <ProjectType>BlenX</ProjectType>
+    <Icon>ProgItem.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem TargetFileName="$fileinputname$.prog" ReplaceParameters="true">
+      ProgTemplate.prog
+    </ProjectItem>
+  </TemplateContent>
+</VSTemplate>

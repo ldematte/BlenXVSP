@@ -1,0 +1,8 @@
+[steps = 100]
+
+<<BASERATE: inf>>
+
+let $className$ : bproc = #(x, $className$Binder)
+   [ nil ];
+   
+run 100 $className$

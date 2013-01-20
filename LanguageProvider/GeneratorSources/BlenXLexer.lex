@@ -1,0 +1,228 @@
+
+%using Babel;
+%using Babel.Parser;
+%using Dema.BlenX.VisualStudio;
+
+%namespace Babel.Lexer
+
+%{
+
+
+public struct keyword
+{
+   public readonly string Id;
+   public readonly int Token;
+   public readonly string Description;
+   public readonly BlenXScopeType ValidScope;
+
+   public keyword(string id, int token, string description, BlenXScopeType validScope)
+   {
+      this.Id = id;
+      this.Token = token;
+      this.Description = description;
+      this.ValidScope = validScope;
+   }
+}
+
+public static keyword[] piKeywords = {
+new keyword("rep", 		(int)Tokens.LBANG,        "Replicate the process",            BlenXScopeType.InsidePi | BlenXScopeType.InsideBox), 
+new keyword("delay",    (int)Tokens.LTAU,         "Inserts a stochastic delay",       BlenXScopeType.InsidePi | BlenXScopeType.InsideBox), 
+new keyword("min",      (int)Tokens.LMIN,         "Not supported",                    BlenXScopeType.InsideNothing), 
+new keyword("if",       (int)Tokens.LIF,          "Inserts a conditional guard",      BlenXScopeType.InsidePi), 
+new keyword("endif",	   (int)Tokens.LENDIF,       "End of condition",                 BlenXScopeType.InsidePi), 
+new keyword("then",     (int)Tokens.LTHEN,        " ",                                BlenXScopeType.InsidePi), 
+new keyword("and",      (int)Tokens.LAND,         "Logical AND",                      BlenXScopeType.InsideIf), 
+new keyword("or",       (int)Tokens.LOR,          "Logical OR",                       BlenXScopeType.InsideIf), 
+new keyword("not",		(int)Tokens.LNOT,         "Negation",                         BlenXScopeType.InsideIf), 
+new keyword("changed",  (int)Tokens.LCHANGED,     "Condition is changed",             BlenXScopeType.InsideNothing),
+new keyword("unhidden",	(int)Tokens.LSTATEUNHIDE, "Unhidden state of binder",         BlenXScopeType.InsideIf),
+new keyword("hidden",	(int)Tokens.LSTATEHIDE,   "Hidden state of binder",           BlenXScopeType.InsideIf),
+new keyword("bound",	   (int)Tokens.LSTATEBOUND,  "Bound binder",                     BlenXScopeType.InsideIf),
+new keyword("nil",		(int)Tokens.LNIL,         "Deadlocked (do nothing) process",  BlenXScopeType.InsidePi | BlenXScopeType.InsideBox),
+new keyword("expose", 	(int)Tokens.LEXPOSE,      "Expose a new binder",              BlenXScopeType.InsidePi | BlenXScopeType.InsideBox),
+new keyword("hide",		(int)Tokens.LHIDE,        "Hide a binder",                    BlenXScopeType.InsidePi | BlenXScopeType.InsideBox),
+new keyword("unhide", 	(int)Tokens.LUNHIDE,      "Unhide a binder",                  BlenXScopeType.InsidePi | BlenXScopeType.InsideBox),
+new keyword("ch",       (int)Tokens.LCHANGE,      "Change binder identifier (type)",  BlenXScopeType.InsidePi | BlenXScopeType.InsideBox),
+new keyword("die",      (int)Tokens.LDIE,         "Tear down this box",               BlenXScopeType.InsidePi | BlenXScopeType.InsideBox)
+};
+
+public static Dictionary<char, List<keyword>> piKeywordMap = null;
+
+public override void yyerror(string format, params object[] args)
+{
+   base.yyerror(format, args);
+   if (handler != null)
+      handler.AddError(String.Format(format, args), this.tokLin, this.tokCol, this.tokLen, 0);
+   System.Diagnostics.Debug.WriteLine(this.tokLin + ", " + this.tokCol + ": " + String.Format(format, args));
+}
+
+private int GetIdToken(string txt)
+{
+   if (piKeywordMap == null)
+   {
+      piKeywordMap = new Dictionary<char, List<keyword>>();
+      
+      foreach (var k in piKeywords)
+      {
+         char c = k.Id[0];
+         if (!piKeywordMap.ContainsKey(c))
+            piKeywordMap[c] = new List<keyword>();
+
+         piKeywordMap[c].Add(k);
+      }
+   }
+   
+   if (piKeywordMap.ContainsKey(txt[0]))
+   {
+      foreach (var k in piKeywordMap[txt[0]])
+         if (k.Id.Equals(txt))
+            return (k.Token);
+   }
+   
+   //ids are registered by the parser
+   return (int)Tokens.LID;
+}
+       
+internal void LoadYylval()
+{
+  yylval.ptr_string = tokTxt;
+  yylloc = new LexLocation(tokLin, tokCol, tokLin, tokECol);
+}
+
+%}
+
+
+delim [ \t\f\v]
+fline (\r\n?|\n)
+NotEnd [^\r\n]
+sb {delim}+
+
+DLetter [a-z]
+ULetter [A-Z]
+Digit [0-9]
+Exp [Ee][+\-]?{Digit}+
+
+id ({DLetter}|{ULetter}|_)({ULetter}|{DLetter}|{Digit}|_)*
+
+decimal {Digit}+
+real1 {Digit}+{Exp}
+real2 {Digit}*"."{Digit}+({Exp})?
+real3 {Digit}+"."{Digit}*({Exp})?
+
+CmntStrt     \/\*
+CmntEnd      \*\/
+CmntContent  [^\*\n\r]*
+
+%x CMMNT
+
+%%
+
+{sb}    { return (int)Tokens.LEX_WHITE; }
+{fline} { return (int)Tokens.LEX_WHITE; }
+
+^{CmntStrt}{CmntContent}\**          { BEGIN(CMMNT); return (int)Tokens.LEX_COMMENT; }
+^{CmntStrt}{CmntContent}\**{CmntEnd} { return (int)Tokens.LEX_COMMENT; }
+
+<CMMNT>{CmntContent}\**              { return (int)Tokens.LEX_COMMENT; }
+<CMMNT>{CmntContent}\**{CmntEnd}     { BEGIN(INITIAL); return (int)Tokens.LEX_COMMENT; }
+\/\/{NotEnd}*                        { return (int)Tokens.LEX_COMMENT; }
+
+"<"			{ return((int)Tokens.LAOPEN); }
+">"			{ return((int)Tokens.LACLOSE); }
+"{"			{ return((int)Tokens.LGOPEN); }
+"}"			{ return((int)Tokens.LGCLOSE); }
+"|"			{ return((int)Tokens.LPARALLEL); }
+"||"		   { return((int)Tokens.LBPARALLEL); }
+"!"			{ return((int)Tokens.LEM);}
+"?"			{ return((int)Tokens.LQM); }
+"("			{ return((int)Tokens.LPOPEN); }
+")"			{ return((int)Tokens.LPCLOSE); }
+"+"			{ return((int)Tokens.LCHOICE); }
+"^"			{ return((int)Tokens.LRESTRICTION); }
+"["			{ return((int)Tokens.LSOPEN); }
+"]"			{ return((int)Tokens.LSCLOSE); }
+"."			{ return((int)Tokens.LDOT); }
+","			{ return((int)Tokens.LCOMMA); }
+":"			{ return((int)Tokens.LDDOT); }
+";"			{ return((int)Tokens.LDOTCOMMA); }
+"="			{ return((int)Tokens.LEQUAL); }
+"!="        { return((int)Tokens.LNEQUAL); }
+"#"			{ return((int)Tokens.LBB); }
+"->"        { return((int)Tokens.LLEFTARROW); }
+"<-"        { return((int)Tokens.LRIGHTARROW); }
+"#h"	   	{ return((int)Tokens.LBBH); }
+"<<"	   	{ return((int)Tokens.LDAOPEN); }
+">>"	   	{ return((int)Tokens.LDACLOSE); }
+"%%"	   	{ return((int)Tokens.LDELIM); }
+
+"+"			{ return((int)Tokens.LPLUS); }
+"*"         { return((int)Tokens.LTIMES); }
+"/"         { return((int)Tokens.LDIV); }
+"-"         { return((int)Tokens.LMINUS); }
+"exp"       { return((int)Tokens.LEXP); }
+"pow"       { return((int)Tokens.LPOW); }
+"log"       { return((int)Tokens.LLOG); }
+"sqrt"      { return((int)Tokens.LSQRT); }
+
+"var"       { return((int)Tokens.LSTATEVAR); }
+"function"  { return((int)Tokens.LFUNCTION); }
+"const"     { return((int)Tokens.LCONST) ; }
+"init"      { return((int)Tokens.LINIT); }
+
+"1B"        { return ((int)Tokens.LB1); }
+"2B"        { return ((int)Tokens.LB2); }
+
+"when"      { return((int)Tokens.LWHEN); }
+"inherit"   { return((int)Tokens.LINHERIT); }
+"new"       { return((int)Tokens.LNEW); }
+"split"     { return((int)Tokens.LSPLIT); }
+"delete"    { return((int)Tokens.LDELETE); }
+"join"      { return((int)Tokens.LJOIN); }
+"update"    { return((int)Tokens.LUPDATE); }
+"let"       { return((int)Tokens.LLET); }
+"Nil"       { return((int)Tokens.LBNIL); }
+"steps"		{ return((int)Tokens.LSTEPS); }
+"step"		{ return((int)Tokens.LSTEP); }
+"delta"		{ return((int)Tokens.LDELTA); }
+"time"		{ return((int)Tokens.LTIME); }
+"timespan"	{ return((int)Tokens.LTIMESPAN); }
+"run"       { return((int)Tokens.LRUN); }
+"binder"    { return((int)Tokens.LTYPE); }
+
+"pproc"		{ return((int)Tokens.LPIPROCESS); }
+"bproc"		{ return((int)Tokens.LBETAPROCESS); }
+
+"rate"      { return((int)Tokens.LRATE); }
+"identity"	{ return((int)Tokens.LIDENTITY); }
+"complex"   { return((int)Tokens.LMOLECULE); }
+"prefix"    { return((int)Tokens.LPREFIX); }
+"template"	{ return((int)Tokens.LTEMPLATE); }
+"name"		{ return((int)Tokens.LNAME); }
+
+"HIDE"		{ return((int)Tokens.LRHIDE); }
+"UNHIDE"	   { return((int)Tokens.LRUNHIDE); }
+"EXPOSE"	   { return((int)Tokens.LREXPOSE); }
+"BASERATE"	{ return((int)Tokens.LBASERATE); }
+"CHANGE"    { return((int)Tokens.LRCHANGE); }
+
+"normal"	   { return((int)Tokens.LDIST_NORMAL); }
+"gamma"	   { return((int)Tokens.LDIST_GAMMA); }
+"hyperexp"	{ return((int)Tokens.LDIST_HYPEREXP); }
+"inf"       { return((int)Tokens.LINF); }
+
+{id}		   { return(GetIdToken(yytext)); }
+
+{decimal}	{ return((int)Tokens.LDECIMAL); }
+{real1}     { return((int)Tokens.LREAL); }
+{real2}     { return((int)Tokens.LREAL); }
+{real3}     { return((int)Tokens.LREAL); }
+.           { yyerror("illegal char");
+              return (int)Tokens.LEX_ERROR; }
+           
+%{
+   LoadYylval();
+%}
+
+%%
+
+ /* */

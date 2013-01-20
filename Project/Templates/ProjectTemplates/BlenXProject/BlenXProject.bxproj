@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Simulate" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+         ToolsVersion="2.0">
+  <PropertyGroup>
+    <!--<ProductVersion>9.0.20313</ProductVersion>-->
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5A5CBCB8-1EB8-4bdc-8EA0-6CD8519516FF}</ProjectGuid>
+    <!--<ProjectGuid>$guid1$</ProjectGuid>-->
+    <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
+    <AssemblyName>$safeprojectname$</AssemblyName>
+    <Name>$safeprojectname$</Name>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+  </PropertyGroup>
+  <!--<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />-->
+  <ItemGroup>
+    <AvailableItemName Include="Prog" />
+    <AvailableItemName Include="Types" />
+    <AvailableItemName Include="Func" />
+  </ItemGroup>
+
+   <ItemGroup>
+      <Prog Include="Program.prog" />
+      <Types Include="Program.types" />
+      <!--<Func Include="Program.func" />-->
+   </ItemGroup>
+  <!-- Add key to HKEY_LOCALMACHINE\Software\Microsoft\VisualStudio\9.0\MSBuild\SafeImports\-->
+  <Import Project="$(MSBuildExtensionsPath)\BlenX\Dema.BlenX.targets" />
+</Project>
+
+
+<!--<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+      <SchemaVersion>2.0</SchemaVersion>
+      <ProjectGuid>{5A5CBCB8-1EB8-4bdc-8EA0-6CD8519516FF}</ProjectGuid>
+   </PropertyGroup>
+   <ItemGroup>
+      <Prog Include="Program.prog" />
+      <Types Include="Program.types" />
+      --><!--<Func Include="Program.func" />--><!--
+   </ItemGroup>
+
+  <ItemGroup>
+    <AvailableItemName Include="Prog"/>
+    <AvailableItemName Include="Types"/>
+    <AvailableItemName Include="Func"/>
+  </ItemGroup>
+
+  --><!-- Add key to HKEY_LOCALMACHINE\Software\Microsoft\VisualStudio\9.0\MSBuild\SafeImports\--><!--
+  <Import Project="$(MSBuildExtensionsPath)\BlenX\Dema.BlenX.targets"/>
+</Project>-->

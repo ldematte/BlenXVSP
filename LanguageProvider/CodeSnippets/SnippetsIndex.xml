@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SnippetCollection>
+    <Language Lang="BlenXProg" Guid="{B4EF16C8-1E5D-4a29-996D-67EE8D17A179}">
+        <SnippetDir>
+            <OnOff>On</OnOff>
+            <Installed>true</Installed>
+            <Locale>1033</Locale>
+            <DirPath>%ProjDir%\CodeSnippets\Snippets\</DirPath>
+            <LocalizedName>BlenXProg</LocalizedName>
+        </SnippetDir>
+    </Language>
+</SnippetCollection>

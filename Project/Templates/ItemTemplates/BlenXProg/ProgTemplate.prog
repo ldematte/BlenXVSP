@@ -1,0 +1,9 @@
+// TODO: add processes and boxes
+
+let p$safeitemname$ : pproc = nil;
+
+// TODO: replace binder type
+let $safeitemname$ : bproc = #(x, X)
+	[ p$safeitemname$ ];
+
+run 100 $safeitemname$

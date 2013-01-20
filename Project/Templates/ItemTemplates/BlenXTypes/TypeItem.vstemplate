@@ -1,0 +1,15 @@
+<VSTemplate Type="Item" Version="2.0.0"
+   xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>BlenX Types file</Name>
+    <Description>Affinity definition file</Description>
+    <DefaultName>MyTypes</DefaultName>
+    <ProjectType>BlenX</ProjectType>
+    <Icon>TypeItem.ico</Icon>
+  </TemplateData>
+  <TemplateContent>
+    <ProjectItem TargetFileName="$fileinputname$.types" ReplaceParameters="true">
+      TypeTemplate.types
+    </ProjectItem>
+  </TemplateContent>
+</VSTemplate>
