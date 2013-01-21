@@ -16,9 +16,11 @@ However, I ended up using MPF (the Managed Package Framework), and therefore I n
 
 Therefore, it includes many "interesting" bits: code snippets, syntax highliting, code generation, autocompletion, parameters hints, brace matching, collapsing regions and so on. 
 
-==License==
+License(s)
+----------
 
 MPFProj is release under Microsoft Public License (Ms-PL), a liberal license similar to BSD (link: http://mpfproj.codeplex.com/license)
+
 PowerCollections is released under the Eclipse Public License (EPL) (link: http://powercollections.codeplex.com/license)
 
 The source code is released under the 2-clause FreeBSD license:
