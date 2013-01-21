@@ -3,12 +3,25 @@ BlenXVSP
 
 BlenX Visual Studio Package
 
-A Visual Studio plugin which adds support for the "BlenX" language, created at the University of Trento - MSR center with Alessandro Romanel during our PhD.
-The plugin adds intellisense, project, snippet, execution, etc. to Visual Studio. 
-It uses Wintellect PowerCollections (inclued, as a DLL) and the Visual Studio Managed Package Framework for Projects (MPFProj - http://mpfproj.codeplex.com/)
+This solution, with several projects, creates a Visual Studio 2008 SP1 plugin which adds support for the "BlenX" language. 
+BlenX is a DSL for the creation of biochemical models, inspired at Beta-binders (http://www.sciencedirect.com/science/article/pii/S1571066106004932).
+The language, for which you can find an introduction here (http://link.springer.com/chapter/10.1007%2F978-1-4419-5797-9_31?LI=true), was created at The University of Trento - Microsoft Research Center for Computational and Systems Biology by Alessandro Romanel and I, with the contribution of other researchers, during our PhD.
 
-I coded it during my Christmas vacation in winter 2008/2009, mostly as an exercise to explore how Visual Studio can be extended.
-The source code is released under the 2-clause FreeBSD license.
+The plugin adds intellisense, project, snippet, support execution through a stocastich simulato (BetaSIM, also written by Alessandro and I), etc. to Visual Studio. 
+It uses Wintellect PowerCollections (inclued, as a DLL) and the Visual Studio Managed Package Framework for Projects (MPFProj - http://mpfproj.codeplex.com/)
+They are both included, for easy of use.
+
+I coded this plugin during my Christmas vacation in winter 2009, mostly as an exercise to explore how to use the Visual Studio SDK to extend the VS IDE; since I was working on BlenX, I decided to use it as a test language. 
+However, I ended up using MPF (the Managed Package Framework), and therefore I needed to write all the parsing code from scratch (since BetaSIM was written in unmanaged C++). Fortunately, this was a quick job, and made the project self-contained. All you need to do to use it is have VS 2008 SP1 and its SDK installed, download, open the solution and recompile.
+
+Therefore, it includes many "interesting" bits: code snippets, syntax highliting, code generation, autocompletion, parameters hints, brace matching, collapsing regions and so on. 
+
+==License==
+
+MPFProj is release under Microsoft Public License (Ms-PL), a liberal license similar to BSD (link: http://mpfproj.codeplex.com/license)
+PowerCollections is released under the Eclipse Public License (EPL) (link: http://powercollections.codeplex.com/license)
+
+The source code is released under the 2-clause FreeBSD license:
 
 Copyright (c) 2009-2012, Lorenzo Dematte'
 All rights reserved.
