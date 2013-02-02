@@ -5,9 +5,9 @@ BlenX Visual Studio Package
 
 This solution, with several projects, creates a Visual Studio 2008 SP1 plugin which adds support for the "BlenX" language. 
 BlenX is a DSL for the creation of biochemical models, inspired at [Beta-binders](http://www.sciencedirect.com/science/article/pii/S1571066106004932).
-The language, for which you can find an introduction [here](http://link.springer.com/chapter/10.1007%2F978-1-4419-5797-9_31?LI=true), was created at The University of Trento - Microsoft Research Center for Computational and Systems Biology by [Alessandro Romanel](https://sites.google.com/site/aromanel/home) and me, with the contribution of other researchers, during our PhD.
+The language, for which you can find an introduction [here](http://link.springer.com/chapter/10.1007%2F978-1-4419-5797-9_31?LI=true), was created at The University of Trento - Microsoft Research Center for Computational and Systems Biology (CoSBi) by [Alessandro Romanel](https://sites.google.com/site/aromanel/home) and me, with the contribution of other researchers, during our PhD.
 
-The plugin adds intellisense (syntax highliting, code generation, autocompletion, parameters hints, brace matching and collapsing regions), creation of projects, code snippets, and custom tasks for the "execution" of programs through a stocastich simulator (BetaSIM, also written by Alessandro and me), etc. to Visual Studio. 
+The plugin adds intellisense (syntax highliting, code generation, autocompletion, parameters hints, brace matching and collapsing regions), creation of projects, code snippets, and custom tasks for the "execution" of programs through a stocastich simulator (BetaSIM, also written by Alessandro and me, which is available at [CoSBi website](http://www.cosbi.eu/index.php/research/prototypes/betawb)), etc. to Visual Studio. 
 It uses [Wintellect PowerCollections](http://powercollections.codeplex.com/) (inclued, as a DLL) and the Visual Studio Managed Package Framework for Projects [MPFProj](http://mpfproj.codeplex.com/)
 
 I coded this plugin during my Christmas vacation in winter 2009, mostly as an exercise to explore how to use the Visual Studio SDK and extend the VS IDE; since I was working on BlenX, I decided to use it as a test language, for which I had already written a parser.
